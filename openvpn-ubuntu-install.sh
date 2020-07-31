@@ -48,7 +48,7 @@ else
 fi
 
 if [[ ! -d /etc/openvpn/easy-rsa/ ]]; then
-	local version="3.0.7"
+	version="3.0.7"
 	wget -O ~/easy-rsa.tgz https://github.com/OpenVPN/easy-rsa/releases/download/v${version}/EasyRSA-${version}.tgz
 	mkdir -p /etc/openvpn/easy-rsa
 	tar xzf ~/easy-rsa.tgz --strip-components=1 --directory /etc/openvpn/easy-rsa
@@ -195,8 +195,7 @@ cipher $CIPHER
 tls-client
 tls-version-min 1.2
 tls-cipher $CC_CIPHER
-ignore-unknown-option block-outside-dns
-setenv opt block-outside-dns
+redirect-gateway
 verb 3" >>/etc/openvpn/client-template.txt
 
 echo ""
