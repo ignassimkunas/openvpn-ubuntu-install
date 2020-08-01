@@ -39,7 +39,7 @@ if [[ ! -e /etc/openvpn/server.conf ]]; then
 	apt-get update
 	apt-get -y install ca-certificates gnupg
 	apt-get install -y openvpn iptables openssl wget ca-certificates curl
-
+fi
 # Find out if the machine uses nogroup or nobody for the permissionless group
 if grep -qs "^nogroup:" /etc/group; then
 	NOGROUP=nogroup
