@@ -5,11 +5,11 @@ Bash script for building an OpenVPN server and generating a config file for the 
 
 First, download the file, like so:
 
-``wget https://raw.githubusercontent.com/ignassimkunas/openvpn-ubuntu-install/master/openvpn-ubuntu-install.sh``
+``sudo wget https://raw.githubusercontent.com/ignassimkunas/openvpn-ubuntu-install/master/openvpn-ubuntu-install.sh``
 
 Make it executable:
 
-``chmod +x openvpn-ubuntu-install.sh ``
+``sudo chmod +x openvpn-ubuntu-install.sh ``
 
 Afterwards, simply run the script:
 
