@@ -1,17 +1,6 @@
 #!/bin/bash
 
 IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
-
-# If $IP is a private IP address, the server must be behind NAT
-if echo "$IP" | grep -qE '^(10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|192\.168)'; then
-	echo ""
-	echo "It seems this server is behind NAT. What is its public IPv4 address or hostname?"
-	echo "We need it for the clients to connect to the server."
-	until [[ $ENDPOINT != "" ]]; do
-		read -rp "Public IPv4 address or hostname: " -e ENDPOINT
-	done
-fi
-
 PORT="1194"
 PROTOCOL="udp"
 APPROVE_INSTALL=${APPROVE_INSTALL:-y}
@@ -23,17 +12,6 @@ DH_CURVE="prime256v1"
 HMAC_ALG="SHA256"
 TLS_SIG="1" # tls-crypt
 NIC=$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
-if [[ -z $NIC ]]; then
-	echo
-	echo "Can not detect public interface."
-	echo "This needs for setup MASQUERADE."
-	until [[ $CONTINUE =~ (y|n) ]]; do
-		read -rp "Continue? [y/n]: " -e CONTINUE
-	done
-	if [[ $CONTINUE == "n" ]]; then
-		exit 1
-	fi
-fi
 
 if [[ ! -e /etc/openvpn/server.conf ]]; then
 	apt-get update
@@ -47,6 +25,7 @@ else
 	NOGROUP=nobody
 fi
 
+# Installing easy-rsa
 if [[ ! -d /etc/openvpn/easy-rsa/ ]]; then
 	version="3.0.7"
 	wget -O ~/easy-rsa.tgz https://github.com/OpenVPN/easy-rsa/releases/download/v${version}/EasyRSA-${version}.tgz
@@ -199,8 +178,7 @@ redirect-gateway
 verb 3" >>/etc/openvpn/client-template.txt
 
 echo ""
-echo "Tell me a name for the client."
-echo "Use one word only, no special characters."
+echo "Please enter a name for the client."
 
 until [[ $CLIENT =~ ^[a-zA-Z0-9_]+$ ]]; do
 	read -rp "Client name: " -e CLIENT
